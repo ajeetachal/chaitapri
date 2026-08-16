@@ -53,10 +53,10 @@ button{font-family:inherit;}
   position:absolute; inset:0;
   background-color:var(--deep-brown);
   background-image:
-    linear-gradient(180deg, rgba(10,6,2,.18) 0%, rgba(10,6,2,.52) 62%, rgba(6,3,1,.88) 100%),
-    var(--bg-image, url("https://imgh.in/host/lthdc5"));
+    linear-gradient(180deg, rgba(10,6,2,.15) 0%, rgba(10,6,2,.55) 62%, rgba(6,3,1,.86) 100%),
+    var(--bg-image, none);
   background-size:cover;
-  background-position:center center;
+  background-position:center 38%;
   transition: filter 900ms ease, background-image 700ms ease;
   animation: breathe 26s ease-in-out infinite alternate;
   filter: sepia(.12) saturate(1.05) brightness(.98);
@@ -113,8 +113,8 @@ button{font-family:inherit;}
   font-size:12.5px; letter-spacing:.14em; text-transform:uppercase;
   color:var(--paper);
 }
-.topbar .clock{ opacity:.85; font-variant-numeric:tabular-nums; }
-.topbar .presence{ display:flex; align-items:center; gap:7px; opacity:.85; }
+.topbar .clock{ opacity:.9; font-variant-numeric:tabular-nums; background:rgba(255,255,255,.08); backdrop-filter:blur(8px) saturate(160%); -webkit-backdrop-filter:blur(8px) saturate(160%); border:1px solid rgba(255,255,255,.16); border-radius:20px; padding:6px 12px; }
+.topbar .presence{ display:flex; align-items:center; gap:7px; opacity:.9; background:rgba(255,255,255,.08); backdrop-filter:blur(8px) saturate(160%); -webkit-backdrop-filter:blur(8px) saturate(160%); border:1px solid rgba(255,255,255,.16); border-radius:20px; padding:6px 12px; }
 .topbar .presence .dot{
   width:6px;height:6px;border-radius:50%;
   background:var(--mood-accent); box-shadow:0 0 8px 1px var(--mood-glow);
@@ -123,17 +123,31 @@ button{font-family:inherit;}
 @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
 .topbar .links{ display:flex; gap:18px; align-items:center; }
 .topbar .links a{
-  color:var(--paper); text-decoration:none; opacity:.75;
+  color:var(--paper); text-decoration:none; opacity:.85;
   display:flex; align-items:center; gap:6px;
-  transition:opacity .2s ease, color .2s ease;
+  background:rgba(255,255,255,.08);
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:20px; padding:6px 12px;
+  transition:opacity .2s ease, color .2s ease, background .2s ease;
 }
-.topbar .links a:hover, .topbar .links a:focus-visible{ opacity:1; color:var(--gold-bright); }
+.topbar .links a:hover, .topbar .links a:focus-visible{ opacity:1; color:var(--gold-bright); background:rgba(255,255,255,.14); }
 .topbar .links svg{ width:14px; height:14px; }
+.suggest-cup{ display:flex; align-items:center; gap:6px; }
+.suggest-cup svg{ width:13px; height:15px; }
 .info-toggle{
-  background:none;border:none;color:var(--paper);opacity:.6;
-  font-size:11px;letter-spacing:.12em;cursor:pointer;padding:4px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:20px;
+  color:var(--paper);opacity:.85;
+  font-size:11px;letter-spacing:.12em;cursor:pointer;padding:6px 12px;
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity .2s ease, background .2s ease;
 }
-.info-toggle:hover{opacity:1;}
+.info-toggle:hover{opacity:1; background:rgba(255,255,255,.14);}
 
 /* ---------------- HERO ---------------- */
 .hero{
@@ -163,16 +177,18 @@ button{font-family:inherit;}
   width:238px;
 }
 .tea-strip{
-  background:
-    linear-gradient(180deg, rgba(232,221,199,.98), rgba(220,206,176,.94));
-  color:var(--deep-brown);
+  background: rgba(20,12,6,.34);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  color:var(--cream);
   border-radius:2px 8px 2px 8px;
   padding:11px 16px;
   cursor:pointer;
-  border:none; text-align:left;
-  box-shadow:0 6px 14px var(--paper-shadow), inset 0 0 0 1px rgba(93,61,34,.12);
+  border:1px solid rgba(255,255,255,.16);
+  text-align:left;
+  box-shadow:0 6px 18px rgba(0,0,0,.4);
   transform:rotate(var(--tilt,0deg));
-  transition:transform .35s ease, box-shadow .35s ease, filter .35s ease;
+  transition:transform .35s ease, box-shadow .35s ease, filter .35s ease, background .35s ease;
   position:relative;
 }
 .tea-strip:nth-child(1){ --tilt:-.6deg; }
@@ -180,22 +196,22 @@ button{font-family:inherit;}
 .tea-strip:nth-child(3){ --tilt:-.3deg; }
 .tea-strip:nth-child(4){ --tilt:.6deg; }
 .tea-strip:nth-child(5){ --tilt:-.4deg; }
-.tea-strip:hover, .tea-strip:focus-visible{ transform:translateY(-2px) rotate(0deg); }
+.tea-strip:hover, .tea-strip:focus-visible{ transform:translateY(-2px) rotate(0deg); background:rgba(30,18,9,.46); }
 .tea-strip.active{
-  box-shadow:0 8px 22px var(--paper-shadow), 0 0 0 1.5px var(--mood-accent), 0 0 24px -4px var(--mood-glow);
-  filter:brightness(1.05);
+  background:rgba(35,21,11,.55);
+  box-shadow:0 8px 24px rgba(0,0,0,.45), 0 0 0 1.5px var(--mood-accent), 0 0 26px -4px var(--mood-glow);
 }
 .tea-strip .num{
   font-family:'Inter',sans-serif; font-size:10px; letter-spacing:.1em;
-  color:var(--coffee); opacity:.7;
+  color:var(--gold); opacity:.85;
 }
 .tea-strip .name{
   font-family:'Noto Serif Devanagari',serif; font-weight:600; font-size:16px;
-  margin-top:2px;
+  margin-top:2px; color:var(--cream);
 }
 .tea-strip .mood{
   font-family:'Inter',sans-serif; font-size:9.5px; letter-spacing:.1em;
-  text-transform:uppercase; color:var(--coffee); opacity:.65; margin-top:3px;
+  text-transform:uppercase; color:var(--paper); opacity:.7; margin-top:3px;
 }
 
 /* ---------------- SELECTED TEA CARD ---------------- */
@@ -203,33 +219,36 @@ button{font-family:inherit;}
   position:absolute; z-index:16;
   left:50%; bottom:15%; transform:translateX(-50%) rotate(-.6deg);
   width:min(78vw,360px);
-  background:linear-gradient(180deg, rgba(232,221,199,.97), rgba(216,201,169,.94));
-  color:var(--deep-brown);
+  background: rgba(20,12,6,.38);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border:1px solid rgba(255,255,255,.16);
+  color:var(--cream);
   padding:14px 20px; border-radius:3px 10px 3px 10px;
-  box-shadow:0 10px 24px var(--paper-shadow);
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
   text-align:center;
   animation:float-card 7s ease-in-out infinite;
   pointer-events:none;
 }
 @keyframes float-card{ 0%,100%{ transform:translateX(-50%) rotate(-.6deg) translateY(0); } 50%{ transform:translateX(-50%) rotate(-.6deg) translateY(-3px); } }
-.selected-card .eyebrow{ font-family:'Inter',sans-serif; font-size:9.5px; letter-spacing:.14em; opacity:.6; text-transform:uppercase;}
-.selected-card .name{ font-family:'Noto Serif Devanagari',serif; font-weight:700; font-size:22px; margin:3px 0; }
-.selected-card .mood{ font-family:'Inter',sans-serif; font-size:10.5px; letter-spacing:.08em; opacity:.7; text-transform:uppercase; }
-.selected-card .quote{ font-family:'Noto Serif Devanagari',serif; font-style:italic; font-size:13px; opacity:.8; margin-top:6px; }
+.selected-card .eyebrow{ font-family:'Inter',sans-serif; font-size:9.5px; letter-spacing:.14em; opacity:.7; text-transform:uppercase; color:var(--gold);}
+.selected-card .name{ font-family:'Noto Serif Devanagari',serif; font-weight:700; font-size:22px; margin:3px 0; color:var(--cream); }
+.selected-card .mood{ font-family:'Inter',sans-serif; font-size:10.5px; letter-spacing:.08em; opacity:.75; text-transform:uppercase; color:var(--paper); }
+.selected-card .quote{ font-family:'Noto Serif Devanagari',serif; font-style:italic; font-size:13px; opacity:.85; margin-top:6px; color:var(--paper); }
 
-/* ---------------- RADIO PLAYER — classic wooden cabinet ---------------- */
+/* ---------------- RADIO PLAYER — glass-fronted cabinet ---------------- */
 .radio{
   position:absolute; z-index:22; right:34px; top:50%; transform:translateY(-50%);
   width:320px;
-  background:
-    repeating-linear-gradient(95deg, rgba(0,0,0,.10) 0 2px, transparent 2px 7px),
-    linear-gradient(160deg,#4a2f1c,#241207 78%);
+  background: rgba(30,18,9,.42);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
   border-radius:12px;
   padding:16px 16px 14px;
-  box-shadow:0 22px 42px rgba(0,0,0,.55), inset 0 0 0 2px rgba(201,162,39,.3), inset 0 1px 0 rgba(255,255,255,.06);
-  border:1px solid rgba(0,0,0,.45);
+  box-shadow:0 22px 42px rgba(0,0,0,.5), inset 0 0 0 1px rgba(201,162,39,.28), inset 0 1px 0 rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
 }
-.radio.playing{ box-shadow:0 22px 42px rgba(0,0,0,.55), inset 0 0 0 2px rgba(201,162,39,.5), 0 0 34px -4px var(--mood-glow); }
+.radio.playing{ box-shadow:0 22px 42px rgba(0,0,0,.5), inset 0 0 0 1.5px rgba(201,162,39,.45), 0 0 34px -4px var(--mood-glow); }
 .radio.playing .speaker-grille{ animation:grille-glow 2.6s ease-in-out infinite; }
 @keyframes grille-glow{
   0%,100%{ box-shadow: inset 0 0 10px rgba(0,0,0,.7), inset 0 0 0 1px rgba(201,162,39,.15); }
@@ -345,20 +364,23 @@ button{font-family:inherit;}
 }
 .tea-menu-mobile::-webkit-scrollbar{ display:none; }
 .tea-tag{
-  flex:0 0 auto; background:rgba(232,221,199,.94); color:var(--deep-brown);
-  border:none; border-radius:2px 7px 2px 7px; padding:7px 9px;
+  flex:0 0 auto; background:rgba(20,12,6,.4); color:var(--cream);
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:2px 7px 2px 7px; padding:7px 9px;
   font-family:'Noto Sans Devanagari',sans-serif; font-weight:600; font-size:10.5px;
   letter-spacing:.02em;
-  box-shadow:0 4px 10px var(--paper-shadow); white-space:nowrap;
-  writing-mode:horizontal-tb; text-align:left;
+  box-shadow:0 4px 12px rgba(0,0,0,.4); white-space:nowrap;
+  text-align:left;
   transform:rotate(var(--mtilt,0deg));
-  transition:transform .25s ease, box-shadow .25s ease;
+  transition:transform .25s ease, box-shadow .25s ease, background .25s ease;
 }
 .tea-tag:nth-child(odd){ --mtilt:-.8deg; }
 .tea-tag:nth-child(even){ --mtilt:.8deg; }
 .tea-tag.active{
-  box-shadow:0 4px 10px var(--paper-shadow), 0 0 0 1.5px var(--mood-accent), 0 0 16px -3px var(--mood-glow);
-  background:rgba(245,237,222,.98); transform:translateX(2px) rotate(0deg);
+  box-shadow:0 4px 14px rgba(0,0,0,.45), 0 0 0 1.5px var(--mood-accent), 0 0 16px -3px var(--mood-glow);
+  background:rgba(35,21,11,.58); transform:translateX(2px) rotate(0deg);
 }
 
 /* ---------------- ABOUT PANEL ---------------- */
@@ -370,140 +392,18 @@ button{font-family:inherit;}
 }
 .about-panel.open{ display:flex; }
 .about-card{
-  background:linear-gradient(180deg, var(--paper), #d9cba8);
-  color:var(--deep-brown); max-width:420px; width:100%;
-  border-radius:4px 14px 4px 14px; padding:26px 28px; box-shadow:0 24px 60px rgba(0,0,0,.5);
+  background: rgba(20,12,6,.5);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  border:1px solid rgba(255,255,255,.16);
+  color:var(--cream); max-width:420px; width:100%;
+  border-radius:4px 14px 4px 14px; padding:26px 28px; box-shadow:0 24px 60px rgba(0,0,0,.55);
   position:relative;
 }
-.about-card h2{ font-family:'Noto Serif Devanagari',serif; margin:0 0 6px; font-size:22px; }
-.about-card p{ font-family:'Noto Sans Devanagari',sans-serif; font-size:13.5px; line-height:1.6; opacity:.85; }
-.about-card .dev-credit{ margin-top:16px; font-size:11px; opacity:.55; font-family:'Inter',sans-serif; letter-spacing:.04em;}
-.about-close{ position:absolute; top:12px; right:14px; background:none; border:none; font-size:20px; cursor:pointer; color:var(--coffee); }
-
-
-/* ---------------- GLASSMORPHIC UI ---------------- */
-:root{
-  --glass-bg:rgba(18,12,8,.34);
-  --glass-bg-strong:rgba(18,12,8,.48);
-  --glass-border:rgba(255,244,220,.20);
-  --glass-highlight:rgba(255,255,255,.10);
-  --glass-shadow:0 18px 45px rgba(0,0,0,.35);
-  --glass-blur:18px;
-}
-
-.glass,
-.topbar,
-.tea-strip,
-.tea-tag,
-.selected-card,
-.radio,
-.about-card,
-.site-footer{
-  background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.035)),var(--glass-bg);
-  border:1px solid var(--glass-border);
-  box-shadow:var(--glass-shadow),inset 0 1px 0 var(--glass-highlight);
-  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(125%);
-  backdrop-filter:blur(var(--glass-blur)) saturate(125%);
-}
-
-.topbar{
-  left:18px; right:18px; top:14px;
-  padding:11px 18px;
-  border-radius:18px;
-}
-
-.tea-strip{
-  color:var(--cream);
-  border-radius:16px;
-  padding:12px 16px;
-  box-shadow:var(--glass-shadow),inset 0 1px 0 var(--glass-highlight);
-}
-.tea-strip .num,.tea-strip .mood{color:var(--paper);}
-.tea-strip.active{
-  background:linear-gradient(135deg,rgba(255,255,255,.18),rgba(255,255,255,.06)),var(--glass-bg-strong);
-}
-
-.selected-card{
-  color:var(--cream);
-  border-radius:18px;
-  padding:15px 20px;
-}
-.selected-card .eyebrow,.selected-card .mood{color:var(--paper);}
-
-.radio{
-  background:linear-gradient(145deg,rgba(60,38,24,.68),rgba(12,8,5,.58));
-  border-radius:20px;
-  border-color:rgba(255,232,182,.22);
-}
-
-.knob-btn{
-  background:rgba(255,255,255,.09);
-  border:1px solid rgba(255,255,255,.16);
-  -webkit-backdrop-filter:blur(10px);
-  backdrop-filter:blur(10px);
-}
-
-.about-panel{
-  background:rgba(4,2,1,.48);
-  -webkit-backdrop-filter:blur(10px);
-  backdrop-filter:blur(10px);
-}
-.about-card{
-  color:var(--cream);
-  border-radius:22px;
-  background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.045)),rgba(20,13,8,.58);
-}
-.about-card h2,.about-card p,.about-card .dev-credit{color:var(--cream);}
-
-.site-footer{
-  padding:7px 14px;
-  border-radius:999px;
-  color:var(--cream);
-  opacity:.82;
-  font-size:10px;
-  letter-spacing:.10em;
-}
-
-@media (min-width:1101px){
-  .scene{
-    background-image:
-      linear-gradient(180deg,rgba(10,6,2,.16) 0%,rgba(10,6,2,.48) 62%,rgba(6,3,1,.86) 100%),
-      var(--bg-image,url("https://imgh.in/host/lthdc5"));
-  }
-}
-@media (min-width:651px) and (max-width:1100px){
-  .scene{
-    background-image:
-      linear-gradient(180deg,rgba(10,6,2,.16) 0%,rgba(10,6,2,.48) 62%,rgba(6,3,1,.86) 100%),
-      var(--bg-image,url("https://imgh.in/host/nskyev"));
-  }
-}
-@media (max-width:650px){
-  .scene{
-    background-image:
-      linear-gradient(180deg,rgba(10,6,2,.14) 0%,rgba(10,6,2,.46) 60%,rgba(6,3,1,.88) 100%),
-      var(--bg-image,url("https://imgh.in/host/2eqg7k"));
-  }
-  .topbar{
-    left:8px;right:8px;top:8px;
-    padding:9px 11px;
-    border-radius:14px;
-  }
-  .tea-tag{
-    border-radius:12px;
-    color:var(--cream);
-    background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04)),var(--glass-bg);
-  }
-  .radio{
-    border-radius:18px;
-  }
-}
-
-@media (prefers-reduced-motion:reduce){
-  .scene,.steam-particle,.cup-steam-particle,.tea-cup-corner.playing .cup-svg,
-  .radio.playing .speaker-grille,.radio.playing .tuning-needle{animation:none!important;}
-  *{scroll-behavior:auto!important;}
-}
+.about-card h2{ font-family:'Noto Serif Devanagari',serif; margin:0 0 6px; font-size:22px; color:var(--cream); }
+.about-card p{ font-family:'Noto Sans Devanagari',sans-serif; font-size:13.5px; line-height:1.6; opacity:.85; color:var(--paper); }
+.about-card .dev-credit{ margin-top:16px; font-size:11px; opacity:.7; font-family:'Inter',sans-serif; letter-spacing:.04em; color:#ffffff;}
+.about-close{ position:absolute; top:12px; right:14px; background:none; border:none; font-size:20px; cursor:pointer; color:var(--paper); }
 
 /* ---------------- RESPONSIVE ---------------- */
 @media (max-width:1100px){
@@ -589,10 +489,15 @@ button{font-family:inherit;}
 .site-footer{
   position:fixed; left:50%; bottom:10px; transform:translateX(-50%);
   z-index:7; font-family:'Inter',sans-serif; font-size:10px; letter-spacing:.08em;
-  color:var(--paper); opacity:.4; pointer-events:none; white-space:nowrap;
+  color:#ffffff; opacity:.92; pointer-events:none; white-space:nowrap;
+  background:rgba(255,255,255,.08);
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:20px; padding:5px 14px;
 }
 @media (max-width:1100px){ .site-footer{ bottom:8px; font-size:9px; } }
-@media (max-width:650px){ .site-footer{ bottom:calc(4px + env(safe-area-inset-bottom)); font-size:8px; opacity:.4; } }
+@media (max-width:650px){ .site-footer{ bottom:calc(4px + env(safe-area-inset-bottom)); font-size:8px; padding:4px 11px; } }
 </style>
 </head>
 <body>
@@ -609,6 +514,18 @@ button{font-family:inherit;}
     <div class="clock" id="clock">--:--</div>
     <div class="presence"><span class="dot"></span><span class="text" id="presenceText">27 chai lovers here</span></div>
     <div class="links">
+      <a class="suggest-cup" href="https://forms.gle/2opUachR5wGLAoGi9" target="_blank" rel="noopener" aria-label="Send a suggestion" title="Have a suggestion? Tap the cup!">
+        <svg viewBox="0 0 40 44" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 12 L32 12 L28 36 Q20 40 12 36 Z" fill="currentColor" opacity=".92"/>
+          <ellipse cx="20" cy="12" rx="12" ry="2.6" fill="currentColor"/>
+        </svg>
+        <span class="text">Suggest</span>
+      </a>
+      <button class="info-toggle" id="fullscreenBtn" aria-label="Enter fullscreen" title="Fullscreen">
+        <svg id="fsIcon" viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
+          <path d="M4 4h6v2H6v4H4V4zm10 0h6v6h-2V6h-4V4zM4 14h2v4h4v2H4v-6zm16 0h-2v4h-4v2h6v-6z"/>
+        </svg>
+      </button>
       <button class="info-toggle" id="infoBtn" aria-haspopup="dialog">ABOUT</button>
       <a href="https://open.spotify.com" target="_blank" rel="noopener" aria-label="Open Spotify">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4a.6.6 0 0 1-.83.2c-2.28-1.4-5.15-1.7-8.53-.93a.6.6 0 1 1-.27-1.17c3.7-.85 6.87-.48 9.43 1.08.3.18.38.56.2.82zm1.2-2.7a.75.75 0 0 1-1.03.25c-2.6-1.6-6.57-2.06-9.65-1.13a.75.75 0 1 1-.44-1.44c3.53-1.06 7.9-.55 10.87 1.28.36.22.47.68.25 1.04zm.1-2.8C14.9 9 8.9 8.8 5.6 9.8a.9.9 0 1 1-.53-1.72c3.79-1.15 10.36-.92 14.4 1.44a.9.9 0 1 1-.92 1.55z"/></svg>
@@ -620,23 +537,23 @@ button{font-family:inherit;}
       </a>
     </div>
   </header>
-
-  <section class="hero">
+  <!-- <section class="hero">
     <div class="eyebrow">रात · रेडियो · यादें</div>
     <h1 class="hindi-serif">चाय की टपरी</h1>
     <div class="tagline">एक कप चाय, हज़ार बातें</div>
   </section>
+-->
 
   <nav class="tea-menu-desktop" id="teaMenuDesktop" aria-label="Tea menu"></nav>
 
-  <div class="glass selected-card" id="selectedCard" aria-live="polite">
+  <div class="selected-card" id="selectedCard" aria-live="polite">
     <div class="eyebrow" id="selEyebrow">CHAI OF THE NIGHT</div>
     <div class="name hindi-serif" id="selName">Adrak Chai</div>
     <div class="mood" id="selMood">Warm · Rainy · Peaceful</div>
     <div class="quote" id="selQuote">"Garam chai, thoda sukoon."</div>
   </div>
 
-  <div class="glass radio" id="radio">
+  <div class="radio" id="radio">
     <div class="brand-plate">Swadeshi Radio Co. · AM 108</div>
     <div class="dial-unit">
       <div class="speaker-grille" aria-hidden="true"></div>
@@ -705,16 +622,16 @@ button{font-family:inherit;}
     </svg>
   </div>
 
-  <div class="site-footer">Developer by Ajeet Achal</div>
+  <div class="site-footer">Developed by Ajeet Achal</div>
 
   <iframe id="ytFrame" class="yt-frame" title="Chai Ki Tapri Radio Player" allow="autoplay; encrypted-media" frameborder="0"></iframe>
 
   <div class="about-panel" id="aboutPanel" role="dialog" aria-modal="true" aria-label="About Chai Ki Tapri">
-    <div class="glass about-card">
+    <div class="about-card">
       <button class="about-close" id="aboutClose" aria-label="Close">×</button>
       <h2 class="hindi-serif">चाय की टपरी</h2>
       <p>A virtual roadside tea stall — choose your chai, and let the radio find the mood that matches. Sit a while. Raat, radio, yaadein.</p>
-      <div class="dev-credit">Developer by Ajeet Achal</div>
+      <div class="dev-credit">Developed by Ajeet Achal</div>
     </div>
   </div>
 
@@ -730,8 +647,7 @@ const TEAS = [
     quote:"Ek kadak chai, poori mehfil jawan.",
     youtubeId:"vFAyfTQyZfg",
     radioTitle:"Masala Chai Radio",
-    accent:"#c1531b", glow:"rgba(193,83,27,.4)",
-    bg:"https://as1.ftcdn.net/v2/jpg/20/67/85/88/1000_F_2067858837_hC9CrPWYhO9FRJhPGqwl43DZI5I9YB13.jpg"
+    accent:"#c1531b", glow:"rgba(193,83,27,.4)"
   },
   {
     id:"adrak", num:"02",
@@ -740,8 +656,7 @@ const TEAS = [
     quote:"Garam chai, thoda sukoon.",
     youtubeId:"RlyVCMHCuqc",
     radioTitle:"Adrak Chai Radio",
-    accent:"#c9a227", glow:"rgba(201,162,39,.4)",
-    bg:"https://imgh.in/host/c35fkj"
+    accent:"#c9a227", glow:"rgba(201,162,39,.4)"
   },
   {
     id:"elaichi", num:"03",
@@ -750,8 +665,7 @@ const TEAS = [
     quote:"Khushbu jo dil tak pahunche.",
     youtubeId:"Rg3YlUwSkUc",
     radioTitle:"Elaichi Chai Radio",
-    accent:"#b5895a", glow:"rgba(181,137,90,.4)",
-    bg:"https://as1.ftcdn.net/v2/jpg/20/67/85/88/1000_F_2067858837_hC9CrPWYhO9FRJhPGqwl43DZI5I9YB13.jpg"
+    accent:"#b5895a", glow:"rgba(181,137,90,.4)"
   },
   {
     id:"kulhad", num:"04",
@@ -760,8 +674,7 @@ const TEAS = [
     quote:"Mitti ki khushbu, gaon ki yaad.",
     youtubeId:"78zRUb3zZtY",
     radioTitle:"Kulhad Chai Radio",
-    accent:"#8a5a2e", glow:"rgba(138,90,46,.4)",
-    bg:"https://imgh.in/host/c35fkj"
+    accent:"#8a5a2e", glow:"rgba(138,90,46,.4)"
   },
   {
     id:"cutting", num:"05",
@@ -770,10 +683,24 @@ const TEAS = [
     quote:"Do cutting, ek adda.",
     youtubeId:"eoXtKw_bW_s",
     radioTitle:"Cutting Chai Radio",
-    accent:"#d97757", glow:"rgba(217,119,87,.4)",
-    bg:"https://as1.ftcdn.net/v2/jpg/20/67/85/88/1000_F_2067858837_hC9CrPWYhO9FRJhPGqwl43DZI5I9YB13.jpg"
+    accent:"#d97757", glow:"rgba(217,119,87,.4)"
   }
 ];
+
+/* Responsive background artwork — same scene across teas, swaps by breakpoint */
+const BG_DESKTOP = "https://imgh.in/host/lthdc5";
+const BG_TABLET  = "https://imgh.in/host/nskyev";
+const BG_MOBILE  = "https://imgh.in/host/2eqg7k";
+function currentBg(){
+  const w = window.innerWidth;
+  if(w <= 650) return BG_MOBILE;
+  if(w <= 1100) return BG_TABLET;
+  return BG_DESKTOP;
+}
+function applyResponsiveBg(){
+  scene.style.setProperty('--bg-image', `url("${currentBg()}")`);
+}
+
 
 let activeIndex = 1; // start on Adrak Chai
 let ytReady = false;
@@ -812,13 +739,13 @@ function renderMenus(){
   teaMenuMobile.innerHTML = '';
   TEAS.forEach((tea, i)=>{
     const strip = document.createElement('button');
-    strip.className = 'glass tea-strip' + (i===activeIndex ? ' active' : '');
+    strip.className = 'tea-strip' + (i===activeIndex ? ' active' : '');
     strip.innerHTML = `<div class="num">${tea.num}</div><div class="name hindi-serif">${tea.nameHindi}</div><div class="mood">${tea.mood}</div>`;
     strip.addEventListener('click', ()=>selectTea(i));
     teaMenuDesktop.appendChild(strip);
 
     const tag = document.createElement('button');
-    tag.className = 'glass tea-tag' + (i===activeIndex ? ' active' : '');
+    tag.className = 'tea-tag' + (i===activeIndex ? ' active' : '');
     tag.textContent = tea.nameEnglish.split(' ')[0].toUpperCase();
     tag.addEventListener('click', ()=>selectTea(i));
     teaMenuMobile.appendChild(tag);
@@ -832,7 +759,6 @@ function selectTea(i, userInitiated=true){
 
   document.documentElement.style.setProperty('--mood-accent', tea.accent);
   document.documentElement.style.setProperty('--mood-glow', tea.glow);
-  scene.style.setProperty('--bg-image', `url("${tea.bg}")`);
   scene.classList.add('mood-transition');
   setTimeout(()=>scene.classList.remove('mood-transition'), 700);
 
@@ -846,6 +772,7 @@ function selectTea(i, userInitiated=true){
   openBtn.href = `https://youtu.be/${tea.youtubeId}`;
 
   renderMenus();
+  updateMediaSession(tea);
   loadYouTube(tea.youtubeId, userInitiated);
 }
 
@@ -920,6 +847,9 @@ function updatePlayIcon(){
   playBtn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
   teaCupCorner.classList.toggle('playing', isPlaying);
   if(isPlaying) startCupSteam(); else stopCupSteam();
+  if('mediaSession' in navigator){
+    navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+  }
 }
 
 /* ============ CORNER CUP STEAM (synced to playback) ============ */
@@ -1017,6 +947,51 @@ document.getElementById('infoBtn').addEventListener('click', ()=>aboutPanel.clas
 document.getElementById('aboutClose').addEventListener('click', ()=>aboutPanel.classList.remove('open'));
 aboutPanel.addEventListener('click', (e)=>{ if(e.target === aboutPanel) aboutPanel.classList.remove('open'); });
 
+/* ============ FULLSCREEN TOGGLE ============ */
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const fsIcon = document.getElementById('fsIcon');
+const FS_ENTER_PATH = "M4 4h6v2H6v4H4V4zm10 0h6v6h-2V6h-4V4zM4 14h2v4h4v2H4v-6zm16 0h-2v4h-4v2h6v-6z";
+const FS_EXIT_PATH = "M9 4H4v5h2V6h3V4zm6 0v2h3v3h2V4h-5zM6 15H4v5h5v-2H6v-3zm12 3h-3v2h5v-5h-2v3z";
+fullscreenBtn.addEventListener('click', ()=>{
+  if(!document.fullscreenElement){
+    (document.documentElement.requestFullscreen?.() || Promise.resolve()).catch(()=>{});
+  } else {
+    (document.exitFullscreen?.() || Promise.resolve()).catch(()=>{});
+  }
+});
+document.addEventListener('fullscreenchange', ()=>{
+  const isFs = !!document.fullscreenElement;
+  const path = fsIcon.querySelector('path');
+  if(path) path.setAttribute('d', isFs ? FS_EXIT_PATH : FS_ENTER_PATH);
+  fullscreenBtn.setAttribute('aria-label', isFs ? 'Exit fullscreen' : 'Enter fullscreen');
+  fullscreenBtn.title = isFs ? 'Exit fullscreen' : 'Fullscreen';
+});
+
+/* ============ MEDIA SESSION — lets music keep playing / stay controllable
+   from the lock screen or when the tab/app is in the background ============ */
+if('mediaSession' in navigator){
+  navigator.mediaSession.setActionHandler('play', ()=>playBtn.click());
+  navigator.mediaSession.setActionHandler('pause', ()=>playBtn.click());
+  navigator.mediaSession.setActionHandler('previoustrack', ()=>goNext(false));
+  navigator.mediaSession.setActionHandler('nexttrack', ()=>goNext(true));
+}
+function updateMediaSession(tea){
+  if(!('mediaSession' in navigator)) return;
+  try{
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: tea.radioTitle,
+      artist: tea.nameHindi,
+      album: 'Chai Ki Tapri Radio',
+      artwork: [
+        { src:`https://img.youtube.com/vi/${tea.youtubeId}/hqdefault.jpg`, sizes:'480x360', type:'image/jpeg' }
+      ]
+    });
+  } catch(err){ /* MediaMetadata unsupported — safe to ignore */ }
+}
+// Don't pause anything on visibility change — audio keeps playing when the
+// tab/app is backgrounded or the screen locks.
+document.addEventListener('visibilitychange', ()=>{ /* intentionally no-op */ });
+
 /* ============ CLOCK ============ */
 function tickClock(){
   const d = new Date();
@@ -1051,25 +1026,14 @@ function spawnSteam(){
 setInterval(spawnSteam, 700);
 for(let i=0;i<5;i++) setTimeout(spawnSteam, i*450);
 
-
-/* ============ KEYBOARD CONTROLS ============ */
-window.addEventListener('keydown', (e)=>{
-  if(e.target && ['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
-  if(e.code === 'Space'){
-    e.preventDefault();
-    playBtn.click();
-  }else if(e.key === 'ArrowRight'){
-    e.preventDefault();
-    goNext(true);
-  }else if(e.key === 'ArrowLeft'){
-    e.preventDefault();
-    goNext(false);
-  }else if(e.key === 'Escape'){
-    aboutPanel.classList.remove('open');
-  }
+/* ============ INIT ============ */
+applyResponsiveBg();
+let bgResizeTimer;
+window.addEventListener('resize', ()=>{
+  clearTimeout(bgResizeTimer);
+  bgResizeTimer = setTimeout(applyResponsiveBg, 200);
 });
 
-/* ============ INIT ============ */
 renderMenus();
 selectTea(activeIndex, false);
 </script>
