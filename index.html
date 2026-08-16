@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Chai Ki Tapri — चाय की टपरी</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink-black:#0d0904;
+  --deep-brown:#2b1b12;
+  --coffee:#5c3d28;
+  --gold:#c9a227;
+  --gold-bright:#e0b93a;
+  --paper:#e8ddc7;
+  --cream:#f5edde;
+  --burnt:#c1531b;
+  --paper-shadow: rgba(15,8,3,.55);
+  --grain-opacity:.05;
+  --mood-accent: var(--burnt);
+  --mood-glow: rgba(193,83,27,.35);
+  color-scheme: dark;
+}
+*{box-sizing:border-box;}
+html,body{
+  margin:0;padding:0;
+  width:100%;height:100%;
+  background:var(--ink-black);
+  color:var(--cream);
+  font-family:'Noto Sans Devanagari','Inter',sans-serif;
+  overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+button{font-family:inherit;}
+::selection{background:var(--gold);color:var(--ink-black);}
+
+.hindi-serif{font-family:'Noto Serif Devanagari','Fraunces',serif;}
+.eng-display{font-family:'Fraunces',serif;}
+
+/* ---------------- APP SHELL ---------------- */
+#app{
+  position:relative;
+  width:100vw;height:100dvh;
+  overflow:hidden;
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+
+/* ---------------- BACKGROUND SCENE ---------------- */
+.scene{
+  position:absolute; inset:0;
+  background-color:var(--deep-brown);
+  background-image:
+    linear-gradient(180deg, rgba(10,6,2,.15) 0%, rgba(10,6,2,.55) 62%, rgba(6,3,1,.86) 100%),
+    var(--bg-image, none);
+  background-size:cover;
+  background-position:center 38%;
+  transition: filter 900ms ease, background-image 700ms ease;
+  animation: breathe 26s ease-in-out infinite alternate;
+  filter: sepia(.12) saturate(1.05) brightness(.98);
+}
+.scene.mood-transition{ filter: sepia(.12) saturate(1.05) brightness(.9) hue-rotate(2deg); }
+@keyframes breathe{
+  0%{ transform:scale(1); }
+  100%{ transform:scale(1.025); }
+}
+.grain{
+  position:absolute; inset:0; pointer-events:none;
+  opacity:var(--grain-opacity); mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.vignette{
+  position:absolute; inset:0; pointer-events:none;
+  box-shadow: inset 0 0 18vw 4vw rgba(0,0,0,.65);
+}
+.moon{
+  position:absolute; top:6%; right:9%;
+  width:64px; height:64px; border-radius:50%;
+  background:radial-gradient(circle at 38% 34%, #fbf3d8, var(--gold) 70%);
+  box-shadow: 0 0 40px 10px rgba(233,201,110,.25);
+  opacity:.85;
+}
+
+/* ---------------- STEAM ---------------- */
+.steam-field{
+  position:absolute; left:50%; bottom:26%;
+  width:220px; height:260px; transform:translateX(-50%);
+  pointer-events:none; z-index:4;
+}
+.steam-particle{
+  position:absolute; bottom:0; left:50%;
+  width:26px; height:34px; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,247,230,.55), rgba(255,247,230,0) 70%);
+  filter:blur(3px);
+  animation: rise 6.5s ease-in infinite;
+  opacity:0;
+}
+@keyframes rise{
+  0%{ opacity:0; transform:translate(-50%,0) scale(.6) rotate(0deg); }
+  15%{ opacity:.32; }
+  55%{ opacity:.22; }
+  100%{ opacity:0; transform:translate(calc(-50% + var(--drift,18px)), -210px) scale(1.5) rotate(var(--rot,8deg)); }
+}
+
+/* ---------------- TOP BAR ---------------- */
+.topbar{
+  position:absolute; top:0; left:0; right:0; z-index:20;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:22px 34px 0;
+  font-family:'Inter',sans-serif;
+  font-size:12.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--paper);
+}
+.topbar .clock{ opacity:.85; font-variant-numeric:tabular-nums; }
+.topbar .presence{ display:flex; align-items:center; gap:7px; opacity:.85; }
+.topbar .presence .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--mood-accent); box-shadow:0 0 8px 1px var(--mood-glow);
+  animation:pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+.topbar .links{ display:flex; gap:18px; align-items:center; }
+.topbar .links a{
+  color:var(--paper); text-decoration:none; opacity:.75;
+  display:flex; align-items:center; gap:6px;
+  transition:opacity .2s ease, color .2s ease;
+}
+.topbar .links a:hover, .topbar .links a:focus-visible{ opacity:1; color:var(--gold-bright); }
+.topbar .links svg{ width:14px; height:14px; }
+.info-toggle{
+  background:none;border:none;color:var(--paper);opacity:.6;
+  font-size:11px;letter-spacing:.12em;cursor:pointer;padding:4px;
+}
+.info-toggle:hover{opacity:1;}
+
+/* ---------------- HERO ---------------- */
+.hero{
+  position:absolute; top:16%; left:50%; transform:translateX(-50%);
+  z-index:15; text-align:center; width:min(90vw,720px);
+  pointer-events:none;
+}
+.hero .eyebrow{
+  font-family:'Inter',sans-serif; font-size:11px; letter-spacing:.32em;
+  text-transform:uppercase; color:var(--gold); opacity:.85; margin-bottom:10px;
+}
+.hero h1{
+  margin:0; font-family:'Noto Serif Devanagari',serif; font-weight:700;
+  font-size:clamp(38px,6vw,68px); color:var(--cream);
+  text-shadow:0 4px 26px rgba(0,0,0,.55);
+  letter-spacing:.01em;
+}
+.hero .tagline{
+  margin-top:10px; font-family:'Fraunces',serif; font-style:italic;
+  font-size:clamp(14px,1.6vw,18px); color:var(--paper); opacity:.85;
+}
+
+/* ---------------- TEA MENU (DESKTOP) ---------------- */
+.tea-menu-desktop{
+  position:absolute; left:34px; top:50%; transform:translateY(-50%);
+  z-index:20; display:flex; flex-direction:column; gap:10px;
+  width:238px;
+}
+.tea-strip{
+  background:
+    linear-gradient(180deg, rgba(232,221,199,.98), rgba(220,206,176,.94));
+  color:var(--deep-brown);
+  border-radius:2px 8px 2px 8px;
+  padding:11px 16px;
+  cursor:pointer;
+  border:none; text-align:left;
+  box-shadow:0 6px 14px var(--paper-shadow), inset 0 0 0 1px rgba(93,61,34,.12);
+  transform:rotate(var(--tilt,0deg));
+  transition:transform .35s ease, box-shadow .35s ease, filter .35s ease;
+  position:relative;
+}
+.tea-strip:nth-child(1){ --tilt:-.6deg; }
+.tea-strip:nth-child(2){ --tilt:.4deg; }
+.tea-strip:nth-child(3){ --tilt:-.3deg; }
+.tea-strip:nth-child(4){ --tilt:.6deg; }
+.tea-strip:nth-child(5){ --tilt:-.4deg; }
+.tea-strip:hover, .tea-strip:focus-visible{ transform:translateY(-2px) rotate(0deg); }
+.tea-strip.active{
+  box-shadow:0 8px 22px var(--paper-shadow), 0 0 0 1.5px var(--mood-accent), 0 0 24px -4px var(--mood-glow);
+  filter:brightness(1.05);
+}
+.tea-strip .num{
+  font-family:'Inter',sans-serif; font-size:10px; letter-spacing:.1em;
+  color:var(--coffee); opacity:.7;
+}
+.tea-strip .name{
+  font-family:'Noto Serif Devanagari',serif; font-weight:600; font-size:16px;
+  margin-top:2px;
+}
+.tea-strip .mood{
+  font-family:'Inter',sans-serif; font-size:9.5px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--coffee); opacity:.65; margin-top:3px;
+}
+
+/* ---------------- SELECTED TEA CARD ---------------- */
+.selected-card{
+  position:absolute; z-index:16;
+  left:50%; bottom:15%; transform:translateX(-50%) rotate(-.6deg);
+  width:min(78vw,360px);
+  background:linear-gradient(180deg, rgba(232,221,199,.97), rgba(216,201,169,.94));
+  color:var(--deep-brown);
+  padding:14px 20px; border-radius:3px 10px 3px 10px;
+  box-shadow:0 10px 24px var(--paper-shadow);
+  text-align:center;
+  animation:float-card 7s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes float-card{ 0%,100%{ transform:translateX(-50%) rotate(-.6deg) translateY(0); } 50%{ transform:translateX(-50%) rotate(-.6deg) translateY(-3px); } }
+.selected-card .eyebrow{ font-family:'Inter',sans-serif; font-size:9.5px; letter-spacing:.14em; opacity:.6; text-transform:uppercase;}
+.selected-card .name{ font-family:'Noto Serif Devanagari',serif; font-weight:700; font-size:22px; margin:3px 0; }
+.selected-card .mood{ font-family:'Inter',sans-serif; font-size:10.5px; letter-spacing:.08em; opacity:.7; text-transform:uppercase; }
+.selected-card .quote{ font-family:'Noto Serif Devanagari',serif; font-style:italic; font-size:13px; opacity:.8; margin-top:6px; }
+
+/* ---------------- RADIO PLAYER — classic wooden cabinet ---------------- */
+.radio{
+  position:absolute; z-index:22; right:34px; top:50%; transform:translateY(-50%);
+  width:320px;
+  background:
+    repeating-linear-gradient(95deg, rgba(0,0,0,.10) 0 2px, transparent 2px 7px),
+    linear-gradient(160deg,#4a2f1c,#241207 78%);
+  border-radius:12px;
+  padding:16px 16px 14px;
+  box-shadow:0 22px 42px rgba(0,0,0,.55), inset 0 0 0 2px rgba(201,162,39,.3), inset 0 1px 0 rgba(255,255,255,.06);
+  border:1px solid rgba(0,0,0,.45);
+}
+.radio.playing{ box-shadow:0 22px 42px rgba(0,0,0,.55), inset 0 0 0 2px rgba(201,162,39,.5), 0 0 34px -4px var(--mood-glow); }
+.radio.playing .speaker-grille{ animation:grille-glow 2.6s ease-in-out infinite; }
+@keyframes grille-glow{
+  0%,100%{ box-shadow: inset 0 0 10px rgba(0,0,0,.7), inset 0 0 0 1px rgba(201,162,39,.15); }
+  50%{ box-shadow: inset 0 0 14px rgba(0,0,0,.6), inset 0 0 0 1px var(--mood-glow), 0 0 10px -2px var(--mood-glow); }
+}
+.radio.playing .tuning-needle{ animation:needle-flicker 3.4s ease-in-out infinite; }
+@keyframes needle-flicker{ 0%,100%{ opacity:1; } 48%{ opacity:.75; } 52%{ opacity:1; } }
+.radio::before,.radio::after{
+  content:""; position:absolute; width:7px; height:7px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #f2da84, #8a6a1c 72%);
+  box-shadow:0 1px 2px rgba(0,0,0,.65);
+}
+.radio::before{ top:9px; left:9px; }
+.radio::after{ top:9px; right:9px; }
+
+.brand-plate{
+  text-align:center; font-family:'Inter',sans-serif; color:var(--gold);
+  font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; opacity:.85;
+  padding-bottom:10px; margin-bottom:12px;
+  border-bottom:1px solid rgba(201,162,39,.25);
+}
+
+.dial-unit{ display:flex; gap:9px; }
+.speaker-grille{
+  width:66px; flex-shrink:0; border-radius:6px;
+  background:
+    radial-gradient(rgba(0,0,0,.6) 1px, transparent 1.4px) 0 0/7px 7px,
+    linear-gradient(180deg,#1c0f06,#150a04);
+  box-shadow: inset 0 0 10px rgba(0,0,0,.7), inset 0 0 0 1px rgba(201,162,39,.15);
+}
+.dial-window{
+  flex:1; min-width:0; display:flex; gap:9px; align-items:center;
+  background:linear-gradient(180deg, rgba(22,27,18,.92), rgba(10,14,9,.96));
+  border-radius:5px; padding:9px 10px;
+  box-shadow: inset 0 0 0 1px rgba(201,162,39,.25), inset 0 2px 10px rgba(0,0,0,.6);
+}
+.artwork{
+  width:56px; height:56px; flex-shrink:0; border-radius:3px;
+  background-size:cover; background-position:center;
+  box-shadow:0 0 0 2px rgba(0,0,0,.4), 0 0 10px rgba(201,162,39,.15);
+  transition:background-image .5s ease;
+}
+.now-playing{ flex:1; min-width:0; }
+.now-playing .label{ font-family:'Inter',sans-serif; font-size:8px; letter-spacing:.14em; color:var(--gold); opacity:.75; text-transform:uppercase; }
+.now-playing .title{
+  font-family:'Noto Serif Devanagari',serif; font-weight:600; color:#f3ecd6;
+  font-size:13.5px; margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  text-shadow:0 0 8px rgba(240,220,150,.25);
+}
+.now-playing .artist{ font-family:'Inter',sans-serif; font-size:10px; color:var(--paper); opacity:.55; margin-top:2px; }
+
+.tuning-scale{ margin-top:12px; padding:0 2px; }
+.scale-numbers{
+  display:flex; justify-content:space-between; font-family:'Inter',sans-serif;
+  font-size:8px; color:var(--gold); opacity:.55; letter-spacing:.04em; margin-bottom:4px;
+}
+.progress-bar{
+  position:relative; height:4px; border-radius:2px;
+  background:repeating-linear-gradient(90deg, rgba(201,162,39,.35) 0 1px, transparent 1px 7px), rgba(255,255,255,.08);
+  cursor:pointer;
+}
+.progress-fill{ position:absolute; left:0; top:0; height:100%; border-radius:2px; width:0%; background:linear-gradient(90deg,var(--gold),var(--mood-accent)); transition:width .25s linear; }
+.tuning-needle{
+  position:absolute; top:-4px; width:2px; height:12px; background:var(--burnt);
+  box-shadow:0 0 6px 1px var(--mood-glow); left:0%; transform:translateX(-1px);
+  transition:left .25s linear;
+}
+.time-row{
+  display:flex; justify-content:space-between; margin-top:6px;
+  font-family:'Inter',sans-serif; font-size:9.5px; color:var(--paper); opacity:.6;
+  font-variant-numeric:tabular-nums;
+}
+
+.cabinet-controls{ display:flex; align-items:center; justify-content:center; gap:16px; margin-top:14px; }
+.knob-btn{
+  background:radial-gradient(circle at 35% 30%, #6b4a2c, #241207 75%);
+  border:none; border-radius:50%; width:34px; height:34px;
+  display:flex; align-items:center; justify-content:center; color:var(--cream);
+  cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,.5), inset 0 0 0 1px rgba(201,162,39,.3);
+  opacity:.9; transition:transform .2s ease, opacity .2s ease;
+}
+.knob-btn:hover, .knob-btn:focus-visible{ opacity:1; transform:scale(1.06); }
+.knob-btn svg{ width:14px; height:14px; }
+.knob-btn.play-knob{
+  width:48px; height:48px;
+  background:radial-gradient(circle at 35% 30%, var(--gold-bright), var(--burnt) 78%);
+  box-shadow:0 5px 14px rgba(193,83,27,.5), inset 0 0 0 2px rgba(0,0,0,.2);
+}
+.knob-btn.play-knob svg{ width:17px; height:17px; fill:var(--ink-black); }
+.knob-btn.open-link{ text-decoration:none; }
+
+.fader-row{ margin-top:14px; display:flex; flex-direction:column; gap:9px; }
+.fader{ display:flex; align-items:center; gap:8px; }
+.flabel{ width:64px; font-family:'Inter',sans-serif; font-size:8px; letter-spacing:.1em; color:var(--gold); opacity:.6; text-transform:uppercase; }
+.fader input[type=range]{
+  -webkit-appearance:none; flex:1; height:3px; border-radius:3px;
+  background:repeating-linear-gradient(90deg, rgba(201,162,39,.3) 0 1px, transparent 1px 6px), rgba(255,255,255,.1);
+  outline:none;
+}
+.fader input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; width:12px; height:12px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #f2da84, var(--gold) 75%);
+  cursor:pointer; box-shadow:0 0 6px rgba(201,162,39,.7), 0 1px 2px rgba(0,0,0,.5);
+}
+
+/* ---------------- MOBILE TEA SELECTOR — vertical side rail ---------------- */
+.tea-menu-mobile{
+  display:none;
+  position:absolute; left:10px; top:44%; transform:translateY(-50%);
+  z-index:24; flex-direction:column; gap:7px;
+  max-height:48vh; overflow-y:auto; -ms-overflow-style:none; scrollbar-width:none;
+  padding:2px;
+}
+.tea-menu-mobile::-webkit-scrollbar{ display:none; }
+.tea-tag{
+  flex:0 0 auto; background:rgba(232,221,199,.94); color:var(--deep-brown);
+  border:none; border-radius:2px 7px 2px 7px; padding:7px 9px;
+  font-family:'Noto Sans Devanagari',sans-serif; font-weight:600; font-size:10.5px;
+  letter-spacing:.02em;
+  box-shadow:0 4px 10px var(--paper-shadow); white-space:nowrap;
+  writing-mode:horizontal-tb; text-align:left;
+  transform:rotate(var(--mtilt,0deg));
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.tea-tag:nth-child(odd){ --mtilt:-.8deg; }
+.tea-tag:nth-child(even){ --mtilt:.8deg; }
+.tea-tag.active{
+  box-shadow:0 4px 10px var(--paper-shadow), 0 0 0 1.5px var(--mood-accent), 0 0 16px -3px var(--mood-glow);
+  background:rgba(245,237,222,.98); transform:translateX(2px) rotate(0deg);
+}
+
+/* ---------------- ABOUT PANEL ---------------- */
+.about-panel{
+  position:absolute; z-index:40; inset:0;
+  background:rgba(8,5,2,.82); backdrop-filter:blur(3px);
+  display:none; align-items:center; justify-content:center;
+  padding:24px;
+}
+.about-panel.open{ display:flex; }
+.about-card{
+  background:linear-gradient(180deg, var(--paper), #d9cba8);
+  color:var(--deep-brown); max-width:420px; width:100%;
+  border-radius:4px 14px 4px 14px; padding:26px 28px; box-shadow:0 24px 60px rgba(0,0,0,.5);
+  position:relative;
+}
+.about-card h2{ font-family:'Noto Serif Devanagari',serif; margin:0 0 6px; font-size:22px; }
+.about-card p{ font-family:'Noto Sans Devanagari',sans-serif; font-size:13.5px; line-height:1.6; opacity:.85; }
+.about-card .dev-credit{ margin-top:16px; font-size:11px; opacity:.55; font-family:'Inter',sans-serif; letter-spacing:.04em;}
+.about-close{ position:absolute; top:12px; right:14px; background:none; border:none; font-size:20px; cursor:pointer; color:var(--coffee); }
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width:1100px){
+  .tea-menu-desktop{ display:none; }
+  .radio{
+    right:auto; left:50%; top:auto; bottom:76px; transform:translateX(-50%);
+    width:min(88vw,340px);
+  }
+  .selected-card{ width:min(70vw,300px); bottom:calc(76px + 138px); padding:10px 16px; }
+  .selected-card .name{ font-size:18px; }
+  .hero{ top:10%; }
+  .hero h1{ font-size:clamp(30px,7vw,44px); }
+  .tea-menu-mobile{ display:flex; }
+  .topbar{ padding:18px 18px 0; }
+  .topbar .links .text{ display:none; }
+  .radio{ width:min(88vw,340px); }
+}
+@media (max-width:650px){
+  .hero{ top:8%; width:62vw; }
+  .hero .eyebrow{ font-size:9px; letter-spacing:.2em; }
+  .hero h1{ font-size:clamp(24px,7vw,32px); }
+  .hero .tagline{ font-size:11px; }
+  .selected-card{ display:none; }
+  .radio{ width:calc(100% - 96px); left:12px; transform:none; bottom:calc(64px + env(safe-area-inset-bottom)); padding:11px 12px 11px; }
+  .dial-unit{ gap:7px; }
+  .artwork{ width:50px; height:50px; }
+  .speaker-grille{ width:52px; }
+  .now-playing .title{ font-size:11.5px; }
+  .cabinet-controls{ gap:12px; margin-top:10px; }
+  .knob-btn{ width:30px; height:30px; }
+  .knob-btn.play-knob{ width:42px; height:42px; }
+  .fader-row{ display:none; }
+  .moon{ width:40px; height:40px; top:5%; right:6%; }
+  .topbar .presence .text{ display:none; }
+}
+@media (max-width:360px){
+  .radio{ bottom:calc(60px + env(safe-area-inset-bottom)); }
+}
+.visually-hidden{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+:focus-visible{ outline:2px solid var(--gold-bright); outline-offset:2px; }
+.yt-frame{ position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; border:0; }
+
+/* ---------------- CORNER TEA CUP ---------------- */
+.tea-cup-corner{
+  position:fixed; z-index:8; pointer-events:none;
+  width:180px; left:22px; bottom:0;
+  filter:drop-shadow(0 10px 16px rgba(0,0,0,.5));
+}
+.cup-svg{ width:100%; height:auto; display:block; }
+.cup-steam{
+  position:absolute; left:50%; bottom:76%;
+  width:64px; height:100px; transform:translateX(-50%);
+}
+.cup-steam-particle{
+  position:absolute; bottom:0; left:50%;
+  width:15px; height:19px; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,247,230,.65), rgba(255,247,230,0) 70%);
+  filter:blur(2px);
+  animation: cup-rise 2.4s ease-out forwards;
+  opacity:0;
+}
+@keyframes cup-rise{
+  0%{ opacity:0; transform:translate(-50%,0) scale(.5) rotate(0deg); }
+  15%{ opacity:.55; }
+  60%{ opacity:.3; }
+  100%{ opacity:0; transform:translate(calc(-50% + var(--drift,14px)), -104px) scale(1.35) rotate(var(--rot,6deg)); }
+}
+.tea-cup-corner.playing .cup-svg{ animation:cup-pulse 640ms ease-in-out infinite; transform-origin:50% 100%; }
+@keyframes cup-pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.035); } }
+
+@media (max-width:1100px){
+  .tea-cup-corner{ left:auto; right:12px; width:104px; bottom:10px; }
+  .cup-steam{ width:44px; height:66px; }
+  .cup-steam-particle{ width:11px; height:14px; }
+}
+@media (max-width:650px){
+  .tea-cup-corner{ width:56px; right:6px; bottom:calc(6px + env(safe-area-inset-bottom)); }
+  .cup-steam{ width:26px; height:40px; }
+  .cup-steam-particle{ width:8px; height:10px; }
+}
+
+/* ---------------- FOOTER CREDIT ---------------- */
+.site-footer{
+  position:fixed; left:50%; bottom:10px; transform:translateX(-50%);
+  z-index:7; font-family:'Inter',sans-serif; font-size:10px; letter-spacing:.08em;
+  color:var(--paper); opacity:.4; pointer-events:none; white-space:nowrap;
+}
+@media (max-width:1100px){ .site-footer{ bottom:8px; font-size:9px; } }
+@media (max-width:650px){ .site-footer{ bottom:calc(4px + env(safe-area-inset-bottom)); font-size:8px; opacity:.4; } }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="scene" id="scene">
+    <div class="moon"></div>
+    <div class="steam-field" id="steamField"></div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="clock" id="clock">--:--</div>
+    <div class="presence"><span class="dot"></span><span class="text" id="presenceText">27 chai lovers here</span></div>
+    <div class="links">
+      <button class="info-toggle" id="infoBtn" aria-haspopup="dialog">ABOUT</button>
+      <a href="https://open.spotify.com" target="_blank" rel="noopener" aria-label="Open Spotify">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.6 14.4a.6.6 0 0 1-.83.2c-2.28-1.4-5.15-1.7-8.53-.93a.6.6 0 1 1-.27-1.17c3.7-.85 6.87-.48 9.43 1.08.3.18.38.56.2.82zm1.2-2.7a.75.75 0 0 1-1.03.25c-2.6-1.6-6.57-2.06-9.65-1.13a.75.75 0 1 1-.44-1.44c3.53-1.06 7.9-.55 10.87 1.28.36.22.47.68.25 1.04zm.1-2.8C14.9 9 8.9 8.8 5.6 9.8a.9.9 0 1 1-.53-1.72c3.79-1.15 10.36-.92 14.4 1.44a.9.9 0 1 1-.92 1.55z"/></svg>
+        <span class="text">Spotify</span>
+      </a>
+      <a href="https://music.youtube.com" target="_blank" rel="noopener" aria-label="Open YouTube Music">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 16.5A6.5 6.5 0 1 1 12 5.5a6.5 6.5 0 0 1 0 13zM9.7 8.5l6 3.5-6 3.5v-7z"/></svg>
+        <span class="text">YT Music</span>
+      </a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">रात · रेडियो · यादें</div>
+    <h1 class="hindi-serif">चाय की टपरी</h1>
+    <div class="tagline">एक कप चाय, हज़ार बातें</div>
+  </section>
+
+  <nav class="tea-menu-desktop" id="teaMenuDesktop" aria-label="Tea menu"></nav>
+
+  <div class="selected-card" id="selectedCard" aria-live="polite">
+    <div class="eyebrow" id="selEyebrow">CHAI OF THE NIGHT</div>
+    <div class="name hindi-serif" id="selName">Adrak Chai</div>
+    <div class="mood" id="selMood">Warm · Rainy · Peaceful</div>
+    <div class="quote" id="selQuote">"Garam chai, thoda sukoon."</div>
+  </div>
+
+  <div class="radio" id="radio">
+    <div class="brand-plate">Swadeshi Radio Co. · AM 108</div>
+    <div class="dial-unit">
+      <div class="speaker-grille" aria-hidden="true"></div>
+      <div class="dial-window">
+        <div class="artwork" id="artwork"></div>
+        <div class="now-playing">
+          <div class="label">Now Playing</div>
+          <div class="title" id="songTitle">Loading…</div>
+          <div class="artist" id="songArtist">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="tuning-scale">
+      <div class="scale-numbers" aria-hidden="true"><span>88</span><span>92</span><span>96</span><span>100</span><span>104</span><span>108</span></div>
+      <div class="progress-bar" id="progressBar" role="slider" aria-label="Seek" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="progress-fill" id="progressFill"></div>
+        <div class="tuning-needle" id="needle"></div>
+      </div>
+      <div class="time-row">
+        <span id="curTime">0:00</span>
+        <span id="durTime">0:00</span>
+      </div>
+    </div>
+    <div class="cabinet-controls">
+      <button class="knob-btn" id="prevBtn" aria-label="Previous">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+      </button>
+      <button class="knob-btn play-knob" id="playBtn" aria-label="Play">
+        <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="knob-btn" id="nextBtn" aria-label="Next">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM6 6v12l8.5-6z"/></svg>
+      </button>
+      <a class="knob-btn open-link" id="openBtn" href="#" target="_blank" rel="noopener" aria-label="Open on YouTube">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg>
+      </a>
+    </div>
+    <div class="fader-row">
+      <div class="fader">
+        <span class="flabel">Volume</span>
+        <input type="range" id="musicVol" min="0" max="100" value="70" aria-label="Music volume">
+      </div>
+      <div class="fader">
+        <span class="flabel">Ambience</span>
+        <input type="range" id="ambVol" min="0" max="100" value="0" aria-label="Ambience volume">
+      </div>
+    </div>
+  </div>
+
+  <div class="tea-menu-mobile" id="teaMenuMobile" aria-label="Tea menu"></div>
+
+  <div class="tea-cup-corner" id="teaCupCorner" aria-hidden="true">
+    <div class="cup-steam" id="cupSteamField"></div>
+    <svg class="cup-svg" viewBox="0 0 120 132" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="clayGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#cf8a52"/>
+          <stop offset="100%" stop-color="#7a4a26"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="60" cy="123" rx="40" ry="7" fill="rgba(0,0,0,.4)"/>
+      <path d="M26 38 L94 38 L83 111 Q60 121 37 111 Z" fill="url(#clayGrad)" stroke="rgba(0,0,0,.3)" stroke-width="1"/>
+      <path d="M32 50 L88 50 L80 100 Q60 108 40 100 Z" fill="rgba(0,0,0,.08)"/>
+      <ellipse cx="60" cy="38" rx="34" ry="7.5" fill="#dd9257" stroke="rgba(0,0,0,.25)" stroke-width="1"/>
+      <ellipse cx="60" cy="38" rx="24" ry="5" fill="#3a2011"/>
+    </svg>
+  </div>
+
+  <div class="site-footer">Developed by Ajeet Achal</div>
+
+  <iframe id="ytFrame" class="yt-frame" title="Chai Ki Tapri Radio Player" allow="autoplay; encrypted-media" frameborder="0"></iframe>
+
+  <div class="about-panel" id="aboutPanel" role="dialog" aria-modal="true" aria-label="About Chai Ki Tapri">
+    <div class="about-card">
+      <button class="about-close" id="aboutClose" aria-label="Close">×</button>
+      <h2 class="hindi-serif">चाय की टपरी</h2>
+      <p>A virtual roadside tea stall — choose your chai, and let the radio find the mood that matches. Sit a while. Raat, radio, yaadein.</p>
+      <div class="dev-credit">Developed by Ajeet Achal</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============ DATA MODEL ============ */
+const TEAS = [
+  {
+    id:"masala", num:"01",
+    nameHindi:"मसाला चाय", nameEnglish:"Masala Chai",
+    mood:"Bold · Desi · Energetic",
+    quote:"Ek kadak chai, poori mehfil jawan.",
+    youtubeId:"vFAyfTQyZfg",
+    radioTitle:"Masala Chai Radio",
+    accent:"#c1531b", glow:"rgba(193,83,27,.4)",
+    bg:"https://as1.ftcdn.net/v2/jpg/20/67/85/88/1000_F_2067858837_hC9CrPWYhO9FRJhPGqwl43DZI5I9YB13.jpg"
+  },
+  {
+    id:"adrak", num:"02",
+    nameHindi:"अदरक चाय", nameEnglish:"Adrak Chai",
+    mood:"Warm · Rainy · Peaceful",
+    quote:"Garam chai, thoda sukoon.",
+    youtubeId:"RlyVCMHCuqc",
+    radioTitle:"Adrak Chai Radio",
+    accent:"#c9a227", glow:"rgba(201,162,39,.4)",
+    bg:"https://imgh.in/host/c35fkj"
+  },
+  {
+    id:"elaichi", num:"03",
+    nameHindi:"इलायची चाय", nameEnglish:"Elaichi Chai",
+    mood:"Elegant · Romantic · Dreamy",
+    quote:"Khushbu jo dil tak pahunche.",
+    youtubeId:"Rg3YlUwSkUc",
+    radioTitle:"Elaichi Chai Radio",
+    accent:"#b5895a", glow:"rgba(181,137,90,.4)",
+    bg:"https://as1.ftcdn.net/v2/jpg/20/67/85/88/1000_F_2067858837_hC9CrPWYhO9FRJhPGqwl43DZI5I9YB13.jpg"
+  },
+  {
+    id:"kulhad", num:"04",
+    nameHindi:"कुल्हड़ चाय", nameEnglish:"Kulhad Chai",
+    mood:"Rustic · Desi · Earthy",
+    quote:"Mitti ki khushbu, gaon ki yaad.",
+    youtubeId:"78zRUb3zZtY",
+    radioTitle:"Kulhad Chai Radio",
+    accent:"#8a5a2e", glow:"rgba(138,90,46,.4)",
+    bg:"https://imgh.in/host/c35fkj"
+  },
+  {
+    id:"cutting", num:"05",
+    nameHindi:"कटिंग चाय", nameEnglish:"Cutting Chai",
+    mood:"Street · Social · Retro",
+    quote:"Do cutting, ek adda.",
+    youtubeId:"eoXtKw_bW_s",
+    radioTitle:"Cutting Chai Radio",
+    accent:"#d97757", glow:"rgba(217,119,87,.4)",
+    bg:"https://as1.ftcdn.net/v2/jpg/20/67/85/88/1000_F_2067858837_hC9CrPWYhO9FRJhPGqwl43DZI5I9YB13.jpg"
+  }
+];
+
+let activeIndex = 1; // start on Adrak Chai
+let ytReady = false;
+let isPlaying = false;
+let pendingAutoplay = false;
+let currentDuration = 0;
+let listeningTimer = null;
+const PLAYER_ORIGIN = "https://www.youtube.com";
+const PLAYER_ID = "chaiTapriRadio";
+
+/* ============ DOM REFS ============ */
+const scene = document.getElementById('scene');
+const teaMenuDesktop = document.getElementById('teaMenuDesktop');
+const teaMenuMobile = document.getElementById('teaMenuMobile');
+const selName = document.getElementById('selName');
+const selMood = document.getElementById('selMood');
+const selQuote = document.getElementById('selQuote');
+const artwork = document.getElementById('artwork');
+const songTitle = document.getElementById('songTitle');
+const songArtist = document.getElementById('songArtist');
+const openBtn = document.getElementById('openBtn');
+const playBtn = document.getElementById('playBtn');
+const playIcon = document.getElementById('playIcon');
+const progressFill = document.getElementById('progressFill');
+const progressBar = document.getElementById('progressBar');
+const curTimeEl = document.getElementById('curTime');
+const durTimeEl = document.getElementById('durTime');
+const radioEl = document.getElementById('radio');
+const musicVol = document.getElementById('musicVol');
+const ambVol = document.getElementById('ambVol');
+const ytFrame = document.getElementById('ytFrame');
+
+/* ============ RENDER TEA MENUS ============ */
+function renderMenus(){
+  teaMenuDesktop.innerHTML = '';
+  teaMenuMobile.innerHTML = '';
+  TEAS.forEach((tea, i)=>{
+    const strip = document.createElement('button');
+    strip.className = 'tea-strip' + (i===activeIndex ? ' active' : '');
+    strip.innerHTML = `<div class="num">${tea.num}</div><div class="name hindi-serif">${tea.nameHindi}</div><div class="mood">${tea.mood}</div>`;
+    strip.addEventListener('click', ()=>selectTea(i));
+    teaMenuDesktop.appendChild(strip);
+
+    const tag = document.createElement('button');
+    tag.className = 'tea-tag' + (i===activeIndex ? ' active' : '');
+    tag.textContent = tea.nameEnglish.split(' ')[0].toUpperCase();
+    tag.addEventListener('click', ()=>selectTea(i));
+    teaMenuMobile.appendChild(tag);
+  });
+}
+
+/* ============ SELECT TEA ============ */
+function selectTea(i, userInitiated=true){
+  activeIndex = i;
+  const tea = TEAS[i];
+
+  document.documentElement.style.setProperty('--mood-accent', tea.accent);
+  document.documentElement.style.setProperty('--mood-glow', tea.glow);
+  scene.style.setProperty('--bg-image', `url("${tea.bg}")`);
+  scene.classList.add('mood-transition');
+  setTimeout(()=>scene.classList.remove('mood-transition'), 700);
+
+  selName.textContent = tea.nameEnglish;
+  selMood.textContent = tea.mood;
+  selQuote.textContent = `"${tea.quote}"`;
+
+  songTitle.textContent = tea.radioTitle;
+  songArtist.textContent = tea.nameHindi;
+  artwork.style.backgroundImage = `url("https://img.youtube.com/vi/${tea.youtubeId}/hqdefault.jpg")`;
+  openBtn.href = `https://youtu.be/${tea.youtubeId}`;
+
+  renderMenus();
+  loadYouTube(tea.youtubeId, userInitiated);
+}
+
+/* ============ YOUTUBE (iframe + postMessage bridge) ============
+   Uses the YouTube embed's built-in postMessage protocol directly,
+   rather than the external iframe_api script, since it plays more
+   reliably from within a sandboxed embed. */
+function ytSrc(videoId, autoplay){
+  const origin = encodeURIComponent(window.location.origin || 'https://claude.site');
+  return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1&mute=0&autoplay=${autoplay?1:0}&origin=${origin}&widget_referrer=${origin}`;
+}
+let hasStartedPlayback = false; // becomes true once a gesture-linked autoplay navigation has happened
+function loadYouTube(videoId, autoplayWhenReady){
+  ytReady = false;
+  pendingAutoplay = !!autoplayWhenReady;
+  stopProgressLoop();
+  // Setting src with autoplay=1 as a direct, synchronous result of a click is what
+  // browsers actually honor for unmuted autoplay — a later postMessage call is not
+  // reliably treated as tied to the user's gesture, which is why audio stayed muted.
+  ytFrame.src = ytSrc(videoId, autoplayWhenReady);
+  if(autoplayWhenReady) hasStartedPlayback = true;
+}
+function postToPlayer(func, args){
+  if(!ytFrame || !ytFrame.contentWindow) return;
+  ytFrame.contentWindow.postMessage(JSON.stringify({event:'command', func, args: args||[], id: PLAYER_ID}), '*');
+}
+ytFrame.addEventListener('load', ()=>{
+  // Give the embed a moment to attach its message listener, then start polling for state.
+  setTimeout(startProgressLoop, 250);
+});
+
+window.addEventListener('message', (e)=>{
+  if(typeof e.data !== 'string') return;
+  let data;
+  try{ data = JSON.parse(e.data); } catch(err){ return; }
+  if(data.event === 'infoDelivery' && data.info){
+    const info = data.info;
+    if(!ytReady){
+      ytReady = true;
+      postToPlayer('unMute');
+      postToPlayer('setVolume', [Number(musicVol.value)]);
+      if(pendingAutoplay){ postToPlayer('playVideo'); pendingAutoplay = false; }
+    }
+    if(typeof info.duration === 'number' && info.duration > 0) currentDuration = info.duration;
+    if(typeof info.currentTime === 'number'){
+      progressFill.style.width = (currentDuration>0 ? (info.currentTime/currentDuration)*100 : 0) + '%';
+      curTimeEl.textContent = fmtTime(info.currentTime);
+      durTimeEl.textContent = fmtTime(currentDuration);
+    }
+    if(typeof info.playerState === 'number'){
+      const nowPlaying = info.playerState === 1;
+      if(nowPlaying !== isPlaying){ isPlaying = nowPlaying; updatePlayIcon(); }
+      if(info.playerState === 0){ goNext(true); } // ended -> next station
+    }
+  }
+});
+
+function startProgressLoop(){
+  stopProgressLoop();
+  listeningTimer = setInterval(()=>{
+    if(!ytFrame.contentWindow) return;
+    ytFrame.contentWindow.postMessage(JSON.stringify({event:'listening', id: PLAYER_ID}), '*');
+  }, 300);
+}
+function stopProgressLoop(){ if(listeningTimer){ clearInterval(listeningTimer); listeningTimer=null; } }
+
+function updatePlayIcon(){
+  radioEl.classList.toggle('playing', isPlaying);
+  playIcon.innerHTML = isPlaying
+    ? '<rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect>'
+    : '<path d="M8 5v14l11-7z"></path>';
+  playBtn.setAttribute('aria-label', isPlaying ? 'Pause' : 'Play');
+  teaCupCorner.classList.toggle('playing', isPlaying);
+  if(isPlaying) startCupSteam(); else stopCupSteam();
+}
+
+/* ============ CORNER CUP STEAM (synced to playback) ============ */
+const teaCupCorner = document.getElementById('teaCupCorner');
+const cupSteamField = document.getElementById('cupSteamField');
+let cupSteamTimer = null;
+function spawnCupSteam(){
+  const p = document.createElement('div');
+  p.className = 'cup-steam-particle';
+  const drift = (Math.random()*44 - 22).toFixed(0)+'px';
+  const rot = (Math.random()*20 - 10).toFixed(0)+'deg';
+  p.style.setProperty('--drift', drift);
+  p.style.setProperty('--rot', rot);
+  p.style.left = (32 + Math.random()*36) + '%';
+  p.style.animationDuration = (2.1 + Math.random()*0.8) + 's';
+  cupSteamField.appendChild(p);
+  setTimeout(()=>p.remove(), 3200);
+}
+function startCupSteam(){
+  stopCupSteam();
+  spawnCupSteam();
+  // Faster, denser spawn rate while music plays so it visually pulses with the radio.
+  cupSteamTimer = setInterval(spawnCupSteam, 320);
+}
+function stopCupSteam(){ if(cupSteamTimer){ clearInterval(cupSteamTimer); cupSteamTimer=null; } }
+
+function fmtTime(s){
+  if(!isFinite(s) || s < 0) s = 0;
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return m + ':' + String(sec).padStart(2,'0');
+}
+
+/* ============ CONTROLS ============ */
+playBtn.addEventListener('click', ()=>{
+  if(!hasStartedPlayback){
+    // First-ever play needs a real navigation (src change) inside this click
+    // handler so the browser recognizes it as user-initiated and allows sound.
+    loadYouTube(TEAS[activeIndex].youtubeId, true);
+    return;
+  }
+  if(!ytReady){ pendingAutoplay = true; return; }
+  if(isPlaying){ postToPlayer('pauseVideo'); }
+  else { postToPlayer('playVideo'); }
+});
+document.getElementById('prevBtn').addEventListener('click', ()=>goNext(false));
+document.getElementById('nextBtn').addEventListener('click', ()=>goNext(true));
+function goNext(forward){
+  let next = forward ? activeIndex+1 : activeIndex-1;
+  if(next < 0) next = TEAS.length-1;
+  if(next >= TEAS.length) next = 0;
+  selectTea(next, true);
+}
+
+progressBar.addEventListener('click', (e)=>{
+  if(!ytReady || currentDuration<=0) return;
+  const rect = progressBar.getBoundingClientRect();
+  const pct = Math.min(Math.max((e.clientX-rect.left)/rect.width,0),1);
+  postToPlayer('seekTo', [currentDuration*pct, true]);
+});
+
+musicVol.addEventListener('input', ()=>{ postToPlayer('setVolume', [Number(musicVol.value)]); });
+
+/* Ambience: procedural soft noise via Web Audio API, only starts after user gesture */
+let audioCtx=null, noiseNode=null, noiseGain=null;
+function ensureAmbience(){
+  if(audioCtx) return;
+  audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  const bufferSize = 2*audioCtx.sampleRate;
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  let lastOut = 0;
+  for(let i=0;i<bufferSize;i++){
+    const white = Math.random()*2-1;
+    lastOut = (lastOut + 0.02*white) / 1.02;
+    data[i] = lastOut * 3.2;
+  }
+  noiseNode = audioCtx.createBufferSource();
+  noiseNode.buffer = buffer; noiseNode.loop = true;
+  noiseGain = audioCtx.createGain();
+  noiseGain.gain.value = 0;
+  const lp = audioCtx.createBiquadFilter();
+  lp.type='lowpass'; lp.frequency.value=800;
+  noiseNode.connect(lp).connect(noiseGain).connect(audioCtx.destination);
+  noiseNode.start();
+}
+ambVol.addEventListener('input', ()=>{
+  if(Number(ambVol.value) > 0) ensureAmbience();
+  if(noiseGain) noiseGain.gain.value = Number(ambVol.value)/100 * 0.5;
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+});
+
+/* ============ INFO / ABOUT ============ */
+const aboutPanel = document.getElementById('aboutPanel');
+document.getElementById('infoBtn').addEventListener('click', ()=>aboutPanel.classList.add('open'));
+document.getElementById('aboutClose').addEventListener('click', ()=>aboutPanel.classList.remove('open'));
+aboutPanel.addEventListener('click', (e)=>{ if(e.target === aboutPanel) aboutPanel.classList.remove('open'); });
+
+/* ============ CLOCK ============ */
+function tickClock(){
+  const d = new Date();
+  let h = d.getHours(); const m = String(d.getMinutes()).padStart(2,'0');
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12; if(h===0) h=12;
+  document.getElementById('clock').textContent = `${h}:${m} ${ampm}`;
+}
+tickClock(); setInterval(tickClock, 15000);
+
+/* ============ PRESENCE (simulated) ============ */
+function tickPresence(){
+  const base = 24 + Math.floor(Math.random()*9);
+  document.getElementById('presenceText').textContent = `${base} chai lovers here`;
+}
+tickPresence(); setInterval(tickPresence, 12000);
+
+/* ============ STEAM PARTICLES ============ */
+const steamField = document.getElementById('steamField');
+function spawnSteam(){
+  const p = document.createElement('div');
+  p.className = 'steam-particle';
+  const drift = (Math.random()*70 - 35).toFixed(0)+'px';
+  const rot = (Math.random()*24 - 12).toFixed(0)+'deg';
+  p.style.setProperty('--drift', drift);
+  p.style.setProperty('--rot', rot);
+  p.style.left = (44 + Math.random()*90) + 'px';
+  p.style.animationDuration = (5.5 + Math.random()*2.4) + 's';
+  steamField.appendChild(p);
+  setTimeout(()=>p.remove(), 9000);
+}
+setInterval(spawnSteam, 700);
+for(let i=0;i<5;i++) setTimeout(spawnSteam, i*450);
+
+/* ============ INIT ============ */
+renderMenus();
+selectTea(activeIndex, false);
+</script>
+</body>
+</html>
